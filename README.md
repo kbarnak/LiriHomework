@@ -26,7 +26,6 @@ The API's utilized in this assignment are:
      * Date of the Event (use moment to format this as "MM/DD/YYYY")
 
 
-
 2. `node liri.js spotify-this-song '<song name here>'`
 
    * This will show the following information about the song in your terminal/bash window
@@ -38,9 +37,12 @@ The API's utilized in this assignment are:
      * A preview link of the song from Spotify
 
      * The album that the song is from
+     
+<img width="703" alt="spotifythis" src="https://user-images.githubusercontent.com/37203104/48500797-54cafa80-e801-11e8-8e9c-3bad186ad80f.png">
 
    * If no song is provided then your program will default to "The Sign" by Ace of Base.
-
+   
+<img width="605" alt="aceofbase" src="https://user-images.githubusercontent.com/37203104/48500738-2ea55a80-e801-11e8-814e-ea0a02b0ca96.png">
 
 3. `node liri.js movie-this '<movie name here>'`
 
