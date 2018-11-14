@@ -19,13 +19,10 @@ The API's utilized in this assignment are:
    
 <img width="610" alt="concertthis" src="https://user-images.githubusercontent.com/37203104/48500916-978cd280-e801-11e8-8189-1a322ef53a3d.png">
 
-     * Name of Band/Artist/Lineup (For some reason my reponse show the name but afterwards shows me an error and highlights the lineup. Most likely needs additional debugging.)
-
-     * Name of the venue
-
-     * Venue location
-
-     * Date of the Event (use moment to format this as "MM/DD/YYYY")
+   * Name of Band/Artist/Lineup (For some reason my reponse show the name but afterwards shows me an error and highlights the lineup. Most likely needs additional debugging.)
+   * Name of the venue
+   * Venue location
+   * Date of the Event (use moment to format this as "MM/DD/YYYY")
      
 <img width="810" alt="concertthiserror" src="https://user-images.githubusercontent.com/37203104/48500989-be4b0900-e801-11e8-867a-e685fe39a624.png">
 
@@ -34,13 +31,10 @@ The API's utilized in this assignment are:
 
    * This will show the following information about the song in your terminal/bash window
 
-     * Artist(s)
-
-     * The song's name
-
-     * A preview link of the song from Spotify
-
-     * The album that the song is from
+    * Artist(s)
+    * The song's name
+    * A preview link of the song from Spotify
+    * The album that the song is from
      
 <img width="703" alt="spotifythis" src="https://user-images.githubusercontent.com/37203104/48500797-54cafa80-e801-11e8-8e9c-3bad186ad80f.png">
 
@@ -52,14 +46,14 @@ The API's utilized in this assignment are:
 
    * This will output the following information to your terminal/bash window:
 
-       * Title of the movie.
-       * Year the movie came out.
-       * IMDB Rating of the movie.
-       * Rotten Tomatoes Rating of the movie.
-       * Country where the movie was produced.
-       * Language of the movie.
-       * Plot of the movie.
-       * Actors in the movie.
+        * Movie Title
+        * Year the movie came out.
+        * IMDB Rating of the movie.
+        * Rotten Tomatoes Rating of the movie.
+        * Country where the movie was produced.
+        * Language of the movie.
+        * Plot of the movie.
+        * Actors in the movie.
        
 <img width="934" alt="moviethis" src="https://user-images.githubusercontent.com/37203104/48501048-d884e700-e801-11e8-8d2e-7648c312b6be.png">
     
@@ -72,8 +66,8 @@ The API's utilized in this assignment are:
    
 <img width="734" alt="dowhatitsays" src="https://user-images.githubusercontent.com/37203104/48501097-fb170000-e801-11e8-8c25-47b57b31bcf6.png">
 
-     * It should run `spotify-this-song` for "I Want it That Way," as follows the text in `random.txt`.
-     * In this command, I get the error from the switch function "I don't understand, ask Foogle-Bot."
-     * Additional debugging would most likely get this to fixed since everything is lonked properly. 
+   * It should run `spotify-this-song` for "I Want it That Way," as follows the text in `random.txt`.
+   * In this command, I get the error from the switch function "I don't understand, ask Foogle-Bot."
+   * Additional debugging would most likely get this to fixed since everything is lonked properly. 
      
  
