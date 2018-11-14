@@ -11,119 +11,153 @@ let keys = require("./keys");
 
 
 let spotify = new Spotify(keys.spotify);
-let spID = spotify.credentials.id;
-let spSecret = spotify.credentials.secret;
+
+//Checks to see if apis are connected to main JS 
 // console.log("spotify", spotify);
 // console.log("spID", spID, "spSecret", spSecret);
 
 let apiInfo = keys.apiInfo;
 let omdbAPI = apiInfo.omdbAPI;
 let bitAPI = apiInfo.bitAPI;
-// console.log("apiInfo", apiInfo);
-console.log("omdbAPI", omdbAPI, "bitInfo", bitAPI);
 
+// User commands
+let userInput = process.argv[2];
+let userQuery = process.argv.slice(3).join(" ");
 
+function switchCommand() {
+    // User commant options
+    switch (userInput) {
+        case "concert-this":
+            concertThis();
+            break;
+        case "spotify-this-song":
+            spotifyThisSong();
+            break;
+        case "movie-this":
+            movieThis();
+            break;
+        case "do-what-it-says":
+            doWhatItSays();
+            break;
+        default:
+            console.log("I don't understand, ask Foogle-Bot");
+            break;
+    };
+};
 
+switchCommand(userInput, userQuery);
 
-//Get the user input
-const input = process.argv[2];
-
-//make a decision based on the command that you type in terminal
-switch (input) {
-    case "concert-this":
-        concertThis();
-        break;
-    case "spotify-this-song":
-        spotifyThisSong();
-        break;
-    case "movie-this":
-        movieThis();
-        break;
-    case "do-what-it-says":
-        doWhatItSays();
-        break;
-    default:
-    // console.log("I don't understand, ask Foogle-Bot");
-}
-
+// Spotify This Song Code
 function spotifyThisSong() {
-    console.log("SPOTIFY THIS SONG: " + process.argv[3]);
-}
+    // Making sure unserQuery has an input
+    // If no input, display "The Sign" by Ace of Base
+    if (!userQuery.length) {
+        userQuery = "Ace of Base - The Sign"
+    };
 
+    spotify.search({
+        type: 'track',
+        query: userQuery,
+        limit: 4
+    }, function (err, data) {
+        if (err) {
+            return
+            console.log(error + "\n");
+        }
+        else {
+            // Create an array to use in the for loop
+            let arrayLimit = data.tracks.items;
+
+            for (i = 0; i < arrayLimit.length; i++) {
+                console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+                console.log("Artist(s): ", data.tracks.items[i].album.artists[0].name);
+                console.log("Song Title: ", data.tracks.items[i].name);
+                console.log("Preview link: ", data.tracks.items[i].external_urls.spotify);
+                console.log("Album: ", data.tracks.items[i].album.name);
+                console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+            }
+        };
+    });
+};
+
+
+// Concert This Code
 function concertThis() {
-    console.log("CONCERT THIS");
-}
+    request("https://rest.bandsintown.com/artists/" + userQuery + "/events?app_id=" + bitAPI, function (error, response, body) {
+        // If the request finds a result
+        if (!error && response.statusCode === 200) {
+            // Parse the response into a JSON format
+            let banddata = JSON.parse(body);
+            for (i = 0; i < body.length; i++) {
+                console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+                console.log("Artist(s): " + banddata[i].lineup[0])
+                console.log("Venue: " + banddata[i].venue.name)
+                console.log(`Location: " ${banddata[i].venue.city}, ${banddata[i].venue.country}`)
+                console.log("Date and Time: " + moment(banddata[i].datetime).format("MM/DD/YYYY hh:00 A"))
+                console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+            };
 
-//`movie-this`
+        } else {
+            // If request is not found
+            console.log("Sorry! No matches at this time!");
+        };
+    });
+};
 
 
-// * Title of the movie.
-// * Year the movie came out.
-// * IMDB Rating of the movie.
-// * Rotten Tomatoes Rating of the movie.
-// * Country where the movie was produced.
-// * Language of the movie.
-// * Plot of the movie.
-// * Actors in the movie.
-//    * If the user doesn't type a movie in, the program will output data for the movie 'Mr. Nobody.'
+// Movie This Code
+function movieThis() {
+    // Making sure unserQuery has an input
+    // If no input, display "Mr Nobody"
+    if (!userQuery.length) {
+        userQuery = "Mr Nobody"
+    };
+
+    request("http://www.omdbapi.com/?t=" + userQuery + "&apikey=" + omdbAPI, function (error, response, body) {
+        // Parse the response into a JSON format
+        // let movieDetails = JSON.parse(body);
 
 
+        if (!error && response.statusCode == 200) {
 
-// //`do-what-it-says`
+            // sends data to console
+            console.log('')
+            console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+            console.log(" Title: " + JSON.parse(body)["Title"]);
+            console.log(" Release Year: " + JSON.parse(body)["Released"]);
+            console.log(" IMDB Rating: " + JSON.parse(body)["imdbRating"]);
+            console.log(" Country: " + JSON.parse(body)["Country"]);
+            console.log(" Language: " + JSON.parse(body)["Language"]);
+            console.log(" Plot: " + JSON.parse(body)["Plot"]);
+            console.log(" Actors: " + JSON.parse(body)["Actors"]);
+            console.log(" Rotten Tomatoes Rating: " + JSON.parse(body)["tomatoRating"]);
+            console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+            console.log('')
 
-// INSTRUCTIONS:
-// ---------------------------------------------------------------------------------------------------------
-// Level 1:
-// Take any movie with a word title (ex: Cinderella) as a Node argument and retrieve the year it was created
+        } else {
+            //Throw error
+            console.log("Error occurred. Please try again")
+        }
+    });
+};
 
-// Level 2 (More Challenging):
-// Take a move with multiple words (ex: Forrest Gump) as a Node argument and retrieve the year it was created.
-// ---------------------------------------------------------------------------------------------------------
 
-// Include the request npm package (Don't forget to run "npm install request" in this folder first!)
-var request = require("request");
+// Do What It Says Code
+function doWhatItSays() {
+    fs.readFile("random.txt", "utf8", function (error, data) {
+        // If any errors occur. Display error. 
+        if (error) {
+            return console.log(error);
+        }
+        // Then split it by commas so that it is easier to read
+        let dataArr = data.split(",");
 
-// Store all of the arguments in an array
-var nodeArgs = process.argv;
+        // Takes data from random.txt and displays it
+        userInput = dataArr[0];
+        userQuery = dataArr[1];
 
-// Create an empty variable for holding the movie name
-var movieName = "";
+        // Function call 
+        switchCommand(userInput, userQuery);
 
-// Loop through all the words in the node argument
-// And do a little for-loop magic to handle the inclusion of "+"s
-// for (var i = 2; i < nodeArgs.length; i++) {
-
-//   if (i > 2 && i < nodeArgs.length) {
-
-//     movieName = movieName + "+" + nodeArgs[i];
-
-//   }
-
-//   else {
-
-//     movieName += nodeArgs[i];
-
-//   }
-// }
-console.log(nodeArgs.slice(2));
-console.log(nodeArgs.slice(2).join(" "));
-console.log("" + nodeArgs.slice(2));
-movieName = nodeArgs.slice(2).join("+")
-console.log(movieName);
-
-// Then run a request to the OMDB API with the movie specified
-var queryUrl = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&apikey=trilogy";
-
-// This line is just to help us debug against the actual URL.
-console.log(queryUrl);
-
-request(queryUrl, function (error, response, body) {
-
-    // If the request is successful
-    if (!error && response.statusCode === 200) {
-
-        // Parse the body of the site and recover just the imdbRating
-        // (Note: The syntax below for parsing isn't obvious. Just spend a few moments dissecting it).
-        console.log("Release Year: " + JSON.parse(body).Year);
-    }
-});
+    });
+};
